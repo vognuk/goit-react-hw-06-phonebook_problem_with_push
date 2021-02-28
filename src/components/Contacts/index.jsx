@@ -3,11 +3,12 @@ import s from './Contacts.module.css'
 import ContactsAnimation from './ContactsAnimation.module.css'
 import PropTypes from 'prop-types'
 import { CSSTransition, TransitionGroup } from 'react-transition-group'
+import { connect } from 'react-redux'
+import action from '../../redux/actions'
 
 class Contacts extends Component {
   static propTypes = {
     onDelete: PropTypes.func.isRequired,
-    children: PropTypes.element,
     contacts: PropTypes.arrayOf(
       PropTypes.exact({
         id: PropTypes.string.isRequired,
@@ -22,8 +23,8 @@ class Contacts extends Component {
   }
 
   render() {
-    const { contacts, onDelete, children } = this.props;
-
+    const { contacts, onDelete} = this.props;
+  console.log('contacts', this.props);
     return (<div>
       <TransitionGroup
         component="ul"
@@ -39,7 +40,7 @@ class Contacts extends Component {
               {`${el.name}: ${el.number}`}
               <button
                 className={s.button}
-                onClick={() => { onDelete(el.id); }}
+                onClick={() => onDelete(el.id)}
               >
                 Delete
               </button>
@@ -47,7 +48,7 @@ class Contacts extends Component {
           </CSSTransition>
         ))}
       </TransitionGroup>
-      {children}
+      {/* {children} */}
     </div>
     );
   };

@@ -12,36 +12,25 @@ import * as actions from './actions'
 const initialState = [];
 
 const reducer = (state = initialState, actions) => {
-    switch (types) {
+    console.log('reducer', actions, state);
+    switch (actions.type) {
         case types.ADD_CONTACT:
-            return
-            [
+            return [
                 ...state,
-                //     {
-                //     id: action.id,
-                //         text: action.text,
-                //             completed: false
+                actions.payload
+                // {
+                    // id: actions.payload.id,
+                    // name: actions.payload.name,
+                    // number: actions.payload.number,
                 // }
-
-                // name: EventTarget.name.value,
-                // number: EventTarget.name.value,
-
-                {
-                    name: action.name,
-                    number: action.number,
-                }
             ]
 
-        case types.ON_SUBMIT:
-            // e.preventDefault();
-            return {
+        case types.DEL_CONTACT:
+            return state.filter(({id}) => id !== actions.payload);
 
-                // {
-                // name: onSubmit.name,
-                //     number: onSubmit.number,
-                // }
+        case types.INIT_CONTACTS:
+            return actions.payload;
 
-            };
         default:
             return state;
     }

@@ -8,8 +8,10 @@ import Contacts from './components/Contacts'
 import Filter from './components/Filter'
 import Animation from './components/NotificationNumberExist/Animation.module.css'
 import NotificationNumberExist from './components/NotificationNumberExist'
+import { connect } from 'react-redux'
+import action from './redux/actions'
 
-export default class App extends Component {
+class App extends Component {
   state = {
     contacts: [],
     filter: '',
@@ -19,12 +21,12 @@ export default class App extends Component {
   componentDidMount() {
     const contacts = localStorage.getItem('contacts');
     const parsedContacts = JSON.parse(contacts);
-    if (parsedContacts) this.setState({ contacts: parsedContacts });
+    if (parsedContacts) this.props.initContacts(parsedContacts);
   }
 
-  componentDidUpdate(prevState) {
-    const { contacts: nowContacts } = this.state;
-    const { contacts: prevContacts } = prevState;
+  componentDidUpdate(prevProps) {
+    const { contacts: nowContacts } = this.props;
+    const { contacts: prevContacts } = prevProps;
     if (nowContacts !== prevContacts) {
       localStorage.setItem('contacts', JSON.stringify(nowContacts));
     }
@@ -64,13 +66,13 @@ export default class App extends Component {
     this.setState({ filter: e.target.value });
   };
 
-  getVisibleContacts = () => {
-    const { filter, contacts } = this.state;
-    const normalizedFilter = filter.toLowerCase();
-    return contacts.filter(el =>
-      el.name.toLowerCase().includes(normalizedFilter)
-    );
-  };
+  // getVisibleContacts = () => {
+  //   const { filter, contacts } = this.state;
+  //   const normalizedFilter = filter.toLowerCase();
+  //   return contacts.filter(el =>
+  //     el.name.toLowerCase().includes(normalizedFilter)
+  //   );
+  // };
 
   render() {
     const { contacts, name, filter, number, sameContact } = this.state;
@@ -103,10 +105,27 @@ export default class App extends Component {
         />
 
         <Contacts
-          contacts={this.getVisibleContacts()}
-          onDelete={this.deleteContact}
+          contacts={this.props.contacts}
+          onDelete={this.props.delContact}
         />
       </Container>
     );
   }
 }
+
+const mapStateToProps = state => {
+  console.log(state);
+  return {
+    contacts: state,
+  }
+};
+
+const mapDispatchToProps = dispatch => {
+  return {
+    delContact: (id) => dispatch(action.delContact(id)),
+    initContacts: (contacts) => dispatch(action.initContacts(contacts)),
+  }
+};
+
+export default connect(mapStateToProps, mapDispatchToProps)(App);
+

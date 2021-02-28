@@ -3,7 +3,7 @@ import s from './Form.module.css'
 import PropTypes from 'prop-types'
 import { Provider, connect } from 'react-redux'
 import validatePhoneNumber from '../../utils/validator'
-import addContact from '../../redux/actions'
+import action from '../../redux/actions'
 
 // const Form = () => {
 class Form extends Component {
@@ -30,18 +30,20 @@ class Form extends Component {
   handleChange = ({ target }) => {
     const { name, value } = target;
     this.setState({ [name]: value });
-    console.log(target);
-    console.log(this.state);
+    // console.log(target);
+    // console.log(this.state);
   };
 
   handleSubmit = e => {
+    console.log(this.props);
     const { name, number } = this.state;
     e.preventDefault();
-    if (validatePhoneNumber(number) === true) {
-      this.props.onSubmit(name, number);
-    } else {
-      alert("Enter correct number, please")
-    }
+    this.props.addContact(name, number);
+    // if (validatePhoneNumber(number) === true) {
+      // this.props.onSubmit(name, number);
+    // } else {
+    //   alert("Enter correct number, please")
+    // }
     this.reset();
   };
 
@@ -55,7 +57,9 @@ class Form extends Component {
     // console.log(localStorage.getItem('contacts'));
     return (
       <>
-        <form className={s.form} onSubmit={this.handleSubmit}>
+        <form className={s.form} 
+        onSubmit={this.handleSubmit}
+        >
           <label className={s.label}>
             Name
             <span className={s.star}>&#42;</span>
@@ -85,7 +89,10 @@ class Form extends Component {
               <span className={s.star}>&#42;</span> - obligatory fields.
             </span>
           </label>
-          <button className={s.button} onSubmit={addContact} disabled={false}>
+          <button 
+          className={s.button} 
+          // onSubmit={this.props.addContact} 
+          disabled={false}>
             Add contact
           </button>
         </form>
@@ -105,7 +112,7 @@ let mapStateToProps = state => {
 
 const mapDispatchToProps = dispatch => {
   return {
-    addContact: (name, number) => dispatch(addContact(name, number)),
+    addContact: (name, number) => dispatch(action.addContact(name, number)),
   }
 };
 
